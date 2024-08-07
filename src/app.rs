@@ -2,6 +2,7 @@ use crate::error_template::{AppError, ErrorTemplate};
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
+use serde::{Deserialize, Serialize};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -32,12 +33,25 @@ pub fn App() -> impl IntoView {
 /// Renders the home page of your application.
 #[component]
 fn HomePage() -> impl IntoView {
-    // Creates a reactive value to update the button
-    let (count, set_count) = create_signal(0);
-    let on_click = move |_| set_count.update(|count| *count += 1);
+    let submit = Action::<Foo, _>::server();
 
     view! {
-        <h1>"Welcome to Leptos!"</h1>
-        <button on:click=on_click>"Click Me: " {count}</button>
+        <ActionForm action=submit>
+            <label>"foo"<input type="text" name="request[foo]" /></label>
+            <label>"bar"<input type="text" name="request[bar]" /></label>
+            <input type="submit" value="Submit" />
+        </ActionForm>
     }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[non_exhaustive]
+struct FooRequest {
+    pub foo: String,
+    pub bar: String,
+}
+
+#[server]
+async fn foo(request: FooRequest) -> Result<(), ServerFnError> {
+    Ok(())
 }
