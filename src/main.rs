@@ -1,11 +1,11 @@
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
+    use action_form_complex_arg::app::*;
+    use action_form_complex_arg::fileserv::file_and_error_handler;
     use axum::Router;
     use leptos::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
-    use action_form_complex_arg::app::*;
-    use action_form_complex_arg::fileserv::file_and_error_handler;
 
     // Setting get_configuration(None) means we'll be using cargo-leptos's env values
     // For deployment these variables are:
